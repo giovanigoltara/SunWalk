@@ -1,0 +1,10 @@
+[out:json][timeout:180];
+// Berlin–Mitte AOI polygon (lat lon pairs)
+{geocodeArea:Berlin;}; // (not used directly, kept for context)
+(
+  // Buildings as ways
+  way["building"](poly:"52.5096836095 13.3866650261 52.5096836095 13.4156699665 52.5322684336 13.4156699665 52.5322684336 13.3866650261");
+  // Building relations (multipolygons)
+  relation["building"](poly:"52.5096836095 13.3866650261 52.5096836095 13.4156699665 52.5322684336 13.4156699665 52.5322684336 13.3866650261");
+);
+out tags geom;
