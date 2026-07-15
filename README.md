@@ -1,107 +1,181 @@
-# SunWalk -- Real-Time Urban Sun & Shade Mapping for Berlin
+# ☀️ SunWalk - Real-Time Urban Sun & Shade Mapping
 
-SunWalk is an experimental GIS application that maps real-time sun and
-shade conditions in urban environments.\
-The project explores how to combine building geometry, solar position
-algorithms, and walk-path optimization to help users choose the sunniest
-or shadiest routes---starting with Berlin.
+**Find sunny or shady walking routes in Berlin**
 
-This repository presents the early architecture, development roadmap,
-and initial geospatial experiments toward a future MVP.
+SunWalk is a mobile-first Progressive Web App (PWA) that maps real-time sun and shade conditions in urban environments, helping users choose the sunniest or shadiest walking routes.
 
-------------------------------------------------------------------------
+![SunWalk Architecture](docs/sunwalk_architecture.png)
 
-## Project Purpose
+---
 
-Urban microclimates strongly influence comfort, especially in cities
-like Berlin where winter sun is valuable.\
-SunWalk aims to:
+## ✨ Features
 
--   calculate dynamic shadows based on building heights and solar
-    geometry\
--   visualize real-time sun conditions on a map\
--   enable "sun-optimized" or "shade-optimized" walking routes\
--   support urban analytics, public health, and climate-adaptive
-    planning
+- 🗺️ **Real-time shadow mapping** - See where shadows fall based on building geometry and sun position
+- ☀️ **Sun-optimized routes** - Get walking directions that maximize sun exposure (great for cold days)
+- 🌳 **Shade-optimized routes** - Find the coolest path through the city (perfect for hot days)
+- ⏰ **Time slider** - Plan your walk by previewing shadows at different times
+- 📱 **Mobile PWA** - Install on your phone and use offline
 
-------------------------------------------------------------------------
+---
 
-## Project Architecture (Preview)
+## 🚀 Quick Start
 
-The current architecture outlines:
+### Prerequisites
 
--   Berlin AOI ingestion via OSM\
--   building geometry extraction and cleaning\
--   solar position modeling\
--   ray-tracing--based shade estimation\
--   map rendering pipeline for a future web app
+- Python 3.11+
+- Node.js 18+
+- npm or yarn
 
-![SunWalk Architecture](docs/architecture.png)
+### Backend Setup
 
-------------------------------------------------------------------------
+```bash
+cd backend
 
-## Development Roadmap
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-This roadmap highlights the planned path from research to MVP.
+# Install dependencies
+pip install -r requirements.txt
 
-![SunWalk Roadmap](docs/roadmap.png)
+# Copy environment file
+cp .env.example .env
 
-------------------------------------------------------------------------
+# Run the server
+uvicorn app.main:app --reload
+```
 
-## Experiments Included in This Repo
+The API will be available at `http://localhost:8000`
+- API docs: `http://localhost:8000/docs`
+- Health check: `http://localhost:8000/health`
 
-Early-stage development includes:
+### Frontend Setup
 
--   OSMnx (v2.11+) data extraction\
--   building footprint and height processing\
--   sunlight/shadow test plots\
--   first AOI selection for Berlin (Mitte)\
--   notebook-based demonstrators (Colab-ready)
+```bash
+cd frontend
 
-Reproducible experiments can be found under:
+# Install dependencies
+npm install
 
-    /notebooks
+# Run development server
+npm run dev
+```
 
-------------------------------------------------------------------------
+The app will be available at `http://localhost:5173`
 
-## Repository Structure
+---
 
-    sunwalk/
-    ├── README.md
-    ├── docs/
-    │   ├── architecture.png
-    │   ├── roadmap.png
-    │   └── concept.md
-    ├── notebooks/
-    │   └── berlin_sunwalk_osm_aoi_experiments.ipynb
-    ├── src/
-    │   ├── data/
-    │   ├── preprocessing/
-    │   ├── gis/
-    │   └── sunlight/
-    └── examples/
-        └── first_plot_banner.png
+## 🏗️ Architecture
 
-------------------------------------------------------------------------
+```
+sunwalk/
+├── backend/                 # FastAPI Python backend
+│   ├── app/
+│   │   ├── api/            # REST API endpoints
+│   │   ├── core/           # Configuration
+│   │   ├── models/         # Pydantic schemas
+│   │   └── services/       # Business logic
+│   │       ├── solar.py    # Sun position (Pysolar)
+│   │       ├── shadow.py   # Shadow calculation
+│   │       └── routing.py  # Route optimization
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── frontend/               # React + Vite PWA
+│   ├── src/
+│   │   ├── components/    # React components
+│   │   ├── hooks/         # Custom React hooks
+│   │   ├── services/      # API client
+│   │   └── styles/        # CSS
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── src/                    # Pre-computed data
+│   ├── buildings_mitte.gpkg
+│   └── time_masks/        # GeoTIFF shadow masks
+│
+└── notebooks/             # Jupyter experiments
+    └── SunWalk_annotated.ipynb
+```
 
-## Next Steps
+---
 
--   implement complete shade-projection engine\
--   integrate atmospheric parameters\
--   add fallback estimation for missing building heights\
--   prototype interactive web map (MapLibre, deck.gl, or WebGL)\
--   develop path-optimization module for sun or shade routes
+## 🌐 API Endpoints
 
-------------------------------------------------------------------------
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/sun/position` | GET | Get current sun position |
+| `/api/v1/shadows/current` | GET | Get current shadow polygons |
+| `/api/v1/shadows/at-time` | GET | Get shadows for specific time |
+| `/api/v1/routes/optimize` | POST | Calculate optimized route |
+| `/api/v1/routes/sun-route` | GET | Quick sun-optimized route |
+| `/api/v1/routes/shade-route` | GET | Quick shade-optimized route |
 
-## License
+---
 
-MIT License (recommended for open research projects).\
-Add your license file to `LICENSE`.
+## ☁️ Deployment
 
-------------------------------------------------------------------------
+### Backend (Railway)
 
-## Author
+```bash
+cd backend
+railway login
+railway init
+railway up
+```
 
-**Giovani Bonadiman Goltara**\
+### Frontend (Vercel)
+
+```bash
+cd frontend
+vercel
+```
+
+Update `frontend/vercel.json` with your Railway API URL.
+
+---
+
+## 🛠️ Tech Stack
+
+**Backend:**
+- FastAPI (Python)
+- GeoPandas + Shapely
+- Pysolar (solar calculations)
+- Rasterio (GeoTIFF processing)
+
+**Frontend:**
+- React 18 + TypeScript
+- Vite + PWA plugin
+- MapLibre GL JS
+- Mobile-first CSS
+
+**Data:**
+- OpenStreetMap (building footprints)
+- OSMnx (street network)
+- Pre-computed shadow masks (GeoTIFF)
+
+---
+
+## 📍 Coverage
+
+Currently supports **Berlin-Mitte**. More areas coming soon!
+
+---
+
+## 🔬 Research & Experiments
+
+The original prototype was developed in a Jupyter notebook:
+- `notebooks/SunWalk_annotated.ipynb` - Full annotated pipeline
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+## 👤 Author
+
+**Giovani Bonadiman Goltara**
 Urban Research · UX Design · GIS · Data Analysis
