@@ -113,13 +113,13 @@ export default function BottomSheet({
         <div className="weather-divider" />
         <div className="weather-item">
           <span className="weather-icon">🌅</span>
-          <span className="weather-value">{formatTime(new Date(sunPosition?.sunrise || ''))}</span>
+          <span className="weather-value">{sunPosition?.sunrise ? formatTime(new Date(sunPosition.sunrise)) : '–'}</span>
           <span className="weather-label">sunrise</span>
         </div>
         <div className="weather-divider" />
         <div className="weather-item">
           <span className="weather-icon">🌇</span>
-          <span className="weather-value">{formatTime(new Date(sunPosition?.sunset || ''))}</span>
+          <span className="weather-value">{sunPosition?.sunset ? formatTime(new Date(sunPosition.sunset)) : '–'}</span>
           <span className="weather-label">sunset</span>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react'
+import Landing from './components/Landing'
 import Map, { MapHandle } from './components/Map'
 import FloatingControls from './components/FloatingControls'
 import SearchModal from './components/SearchModal'
@@ -9,6 +10,15 @@ import type { Coordinate, RoutePreference } from './types'
 
 function App() {
   const mapRef = useRef<MapHandle>(null)
+
+  // Landing page (shown once per browser session)
+  const [showLanding, setShowLanding] = useState(
+    () => sessionStorage.getItem('sunwalk-entered') !== '1'
+  )
+  const handleEnterApp = useCallback(() => {
+    sessionStorage.setItem('sunwalk-entered', '1')
+    setShowLanding(false)
+  }, [])
 
   // Location state
   const [origin, setOrigin] = useState<Coordinate | null>(null)
@@ -86,6 +96,10 @@ function App() {
     // TODO: Open settings modal
     console.log('Settings clicked')
   }, [])
+
+  if (showLanding) {
+    return <Landing onEnter={handleEnterApp} />
+  }
 
   return (
     <div className="app">
